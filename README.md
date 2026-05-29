@@ -43,7 +43,7 @@ student/bob/git_01
 学生需要执行类似流程：
 
 ```bash
-git clone https://github.com/your-org/vibecoding-course.git
+git clone https://github.com/Shergould/vibecoding-course.git
 cd vibecoding-course
 git checkout -b student/alice/git_01
 # 按课程要求完成 git_01 任务
