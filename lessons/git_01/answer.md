@@ -9,7 +9,7 @@
 假设课程仓库地址是：
 
 ```text
-https://github.com/your-org/vibecoding-course.git
+https://github.com/Shergould/vibecoding-course.git
 ```
 
 请写出把该仓库 clone 到本地的命令。
