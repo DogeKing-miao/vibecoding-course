@@ -15,7 +15,7 @@ https://github.com/Shergould/vibecoding-course.git
 请写出把该仓库 clone 到本地的命令。
 
 ```bash
-git clone https://github.com/Shergould/vibecoding-course.git
+
 ```
 
 ## Q2: 创建自己的 git_01 分支
@@ -29,7 +29,7 @@ student/alice/git_01
 ```
 
 ```bash
-git switch -c student/alice/git_01
+
 ```
 
 ## Q3: 暂存 answer.md
@@ -37,7 +37,7 @@ git switch -c student/alice/git_01
 请写出把当前文件 `lessons/git_01/answer.md` 加入暂存区的命令。
 
 ```bash
-git add lessons/git_01/answer.md
+
 ```
 
 ## Q4: 提交 git_01 作业
@@ -51,7 +51,7 @@ finish git_01
 ```
 
 ```bash
-git commit -m "finish git_01"
+
 ```
 
 ## Q5: 推送自己的分支
@@ -65,5 +65,5 @@ student/alice/git_01
 请写出把该分支推送到远程 `origin` 的命令。
 
 ```bash
-git push origin main
+
 ```
