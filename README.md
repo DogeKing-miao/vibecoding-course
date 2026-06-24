@@ -1,104 +1,115 @@
 # Vibe Coding Course
 
-这是 Vibe Coding 课程的学生代码仓库。
+这是 Vibe Coding 课程代码仓库。学生只需要在本仓库完成作业并 push，系统会自动通知 grader 仓库评分，并把结果反馈到本仓库的 Issue。
 
-## 仓库职责
-
-本仓库用于：
-
-1. 存放课程任务说明和学生需要完成的代码文件。
-2. 让学生在自己的分支上完成每节课实操。
-3. 作为自动评审系统读取学生提交结果的来源。
-4. 让学生在本仓库查看评审反馈，例如 commit status 或反馈 Issue。
-
-本仓库不负责保存最终成绩，不保存评分密钥，也不保存隐藏测试。
-
-## 当前阶段
-
-当前只测试一个 lesson：
+## 当前开放课程
 
 ```text
 git_01
 ```
 
-该 lesson 用于测试学生对 Git 基础操作的掌握情况。
-
-## 学生分支规则
-
-每个学生需要创建自己的分支：
+`git_01` 用于考察 Git 基础操作。你需要在：
 
 ```text
-student/<github_username>/git_01
+lessons/git_01/answer.md
 ```
 
-示例：
+中填写 5 道 Git 命令题。
 
-```text
-student/alice/git_01
-student/bob/git_01
-```
+## 第一次提交
 
-## 学生操作流程
-
-学生需要执行类似流程：
+请把下面示例中的 `alice` 替换成你的 GitHub 用户名。
 
 ```bash
 git clone https://github.com/Shergould/vibecoding-course.git
 cd vibecoding-course
 git checkout -b student/alice/git_01
-# 按课程要求完成 git_01 任务
-git add .
+```
+
+然后修改：
+
+```text
+lessons/git_01/answer.md
+```
+
+修改完成后提交并 push：
+
+```bash
+git add lessons/git_01/answer.md
 git commit -m "finish git_01"
 git push origin student/alice/git_01
 ```
 
-其中：
+## 自动评审流程
 
-- `alice` 替换成学生自己的 GitHub 用户名。
-- commit message 必须包含 `finish git_01`。
-- 学生只能在自己的分支上提交。
-
-## git_01 评审目标
-
-第一版自动评审不检查学生本地实际敲过哪些 Git 命令，而是检查学生最终提交出来的 Git 状态是否符合要求。
-
-评审内容包括：
-
-1. 分支名是否符合 `student/<github_username>/git_01`。
-2. 是否提交了指定 lesson 的内容。
-3. 是否没有修改禁止修改的系统文件。
-4. commit message 是否包含 `finish git_01`。
-5. 任务文件是否填写了有效内容。
-
-## 结果反馈
-
-评审由另一个仓库 `vibecoding-grader` 完成。
-
-学生不需要向 `vibecoding-grader` 提交内容。
-
-评审结果会尽量反馈回本仓库，例如：
-
-1. 学生 commit 页面中的 passed/failed 状态。
-2. 本仓库中的反馈 Issue。
-
-## 与 Odoo 的关系
-
-Odoo 在线学习页面只放本仓库链接和操作说明。
-
-Odoo 不负责：
-
-1. 接收学生代码。
-2. 执行自动评审。
-3. 保存成绩。
-4. 校验密钥。
-
-第一阶段的核心链路是：
+你 push 到 `student/**` 分支后，本仓库会自动通知 grader 仓库评分：
 
 ```text
-Odoo 课程页面
-  -> 学生进入本 GitHub 仓库
-  -> 学生创建自己的分支并提交
-  -> vibecoding-grader 自动评审
-  -> 评审结果反馈回本仓库
+学生 push student/alice/git_01
+  -> course 仓库触发 notify-grader workflow
+  -> grader 仓库开始评分
+  -> grader 在本仓库 Issue 中追加反馈
+  -> grader 删除远程学生分支
 ```
 
+通常反馈会在较短时间内出现。如果没有立刻出现，可以稍等一会儿后刷新 Issues 页面。
+
+## 查看反馈
+
+评分完成后，系统会在本仓库创建或更新一个反馈 Issue：
+
+```text
+[Feedback] <你的 GitHub 用户名> git_01
+```
+
+例如：
+
+```text
+[Feedback] alice git_01
+```
+
+每次提交都会在同一个 Issue 下面追加一条新评论，评论中会显示：
+
+1. 第几次提交。
+2. 本次得分。
+3. 已通过的检查项。
+4. 需要修改的题目或规则。
+5. 如果全部正确，会显示 Odoo 课程完成密钥。
+
+## 重新提交
+
+评分完成后，系统会删除 GitHub 上的远程分支：
+
+```text
+origin/student/<你的 GitHub 用户名>/git_01
+```
+
+这不会删除你电脑上的本地分支。你可以继续在本地分支上修改，然后重新 push，注意保持同一课程多次提交本地分支名一致即可：
+
+```bash
+git add lessons/git_01/answer.md
+git commit -m "finish git_01"
+git push origin student/alice/git_01
+```
+
+远程分支会重新创建，系统会把这次 push 记录为下一次提交，并继续在同一个反馈 Issue 中追加评论。
+
+## 同步 main
+
+如果老师更新了 `main` 分支，建议先同步再继续做题，因此建议每次做题前先进行同步：
+
+```bash
+git fetch origin
+git merge origin/main
+```
+
+如果出现冲突，请先解决冲突，再继续提交。
+
+## 重要规则
+
+- 分支名必须是 `student/<你的 GitHub 用户名>/git_01`。
+- commit message 必须包含 `finish git_01`。
+- 只修改 `lessons/git_01/` 目录。
+- 不要修改 `.github/`、`grader/`、`data/` 等系统目录。
+- 不要删除或修改 `answer.md` 中的题号、标题和代码块结构。
+- 只有 5 道题全部正确时，反馈 Issue 中才会显示 Odoo 完成密钥。
