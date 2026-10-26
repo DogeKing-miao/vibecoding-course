@@ -1,34 +1,49 @@
 name: Notify Grader
 
 on:
-  push:
-    branches:
-      - "student/**"
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
-permissions:
-  contents: read
+# Never check out or execute code from a student's PR in this workflow.
+permissions: {}
 
 jobs:
   notify:
-    if: ${{ startsWith(github.ref_name, 'student/') && github.event.deleted == false }}
+    if: >-
+      github.repository == 'Shergould/vibecoding-course' &&
+      github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    timeout-minutes: 3
 
     steps:
-      - name: Dispatch grader workflow
+      - name: Notify trusted grader
         env:
-          GH_TOKEN: ${{ secrets.GRADER_DISPATCH_TOKEN }}
-          BRANCH_NAME: ${{ github.ref_name }}
-          COMMIT_SHA: ${{ github.sha }}
-          ACTOR: ${{ github.actor }}
+          GRADER_DISPATCH_TOKEN: ${{ secrets.GRADER_DISPATCH_TOKEN }}
         run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "::error::Missing GRADER_DISPATCH_TOKEN secret"
-            exit 1
-          fi
-
-          curl -fsSL -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2026-03-10" \
-            https://api.github.com/repos/Shergould/vibecoding-grader/dispatches \
-            -d "{\"event_type\":\"student_submission\",\"client_payload\":{\"branch\":\"${BRANCH_NAME}\",\"commit\":\"${COMMIT_SHA}\",\"actor\":\"${ACTOR}\"}}"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const token = process.env.GRADER_DISPATCH_TOKEN;
+          if (!token) throw new Error('Missing GRADER_DISPATCH_TOKEN secret');
+          const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const response = await fetch('https://api.github.com/repos/Shergould/vibecoding-grader/dispatches', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/vnd.github+json',
+              Authorization: `Bearer ${token}`,
+              'X-GitHub-Api-Version': '2026-03-10',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              event_type: 'student_submission',
+              client_payload: {
+                course_repo: 'Shergould/vibecoding-course',
+                pr_number: event.pull_request.number,
+                head_sha: event.pull_request.head.sha
+              }
+            }),
+            signal: AbortSignal.timeout(30000)
+          });
+          if (response.status !== 204) throw new Error(`Grader dispatch failed: HTTP ${response.status}`);
+          console.log(`Requested grading for PR #${event.pull_request.number}`);
+          NODE

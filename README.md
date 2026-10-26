@@ -1,115 +1,101 @@
 # Vibe Coding Course
 
-这是 Vibe Coding 课程代码仓库。学生只需要在本仓库完成作业并 push，系统会自动通知 grader 仓库评分，并把结果反馈到本仓库的 Issue。
+这是 Vibe Coding 课程仓库。学生通过 **Fork + Pull Request（PR）** 提交作业，评分器会在 PR 下反馈成绩。无需成为本仓库协作者，也无需配置 Token 或启用自己 Fork 中的 Actions。
 
-## 当前开放课程
-
-```text
-git_01
-```
-
-`git_01` 用于考察 Git 基础操作。你需要在：
-
-```text
-lessons/git_01/answer.md
-```
-
-中填写 5 道 Git 命令题。
+当前开放课程：`git_01`。请填写 `lessons/git_01/answer.md` 中的 5 道 Git 命令题。
 
 ## 第一次提交
 
-请把下面示例中的 `alice` 替换成你的 GitHub 用户名。
+1. 登录 GitHub，打开 [课程仓库](https://github.com/Shergould/vibecoding-course)，点击 **Fork**，将副本创建到自己的个人账号下。
+2. 把以下实际操作命令中的 `alice` 替换成自己的 GitHub 用户名：
 
 ```bash
-git clone https://github.com/Shergould/vibecoding-course.git
+git clone https://github.com/alice/vibecoding-course.git
 cd vibecoding-course
-git checkout -b student/alice/git_01
+git remote add upstream https://github.com/Shergould/vibecoding-course.git
+git switch -c student/alice/git_01
 ```
 
-然后修改：
-
-```text
-lessons/git_01/answer.md
-```
-
-修改完成后提交并 push：
+3. 填写 `lessons/git_01/answer.md`，然后提交到自己的 Fork：
 
 ```bash
 git add lessons/git_01/answer.md
 git commit -m "finish git_01"
-git push origin student/alice/git_01
+git push -u origin student/alice/git_01
 ```
 
-## 自动评审流程
+4. 在 GitHub 打开自己的 Fork，点击 **Compare & pull request**。也可以在课程原仓库的 **Pull requests → New pull request → compare across forks** 创建 PR，确认：
 
-你 push 到 `student/**` 分支后，本仓库会自动通知 grader 仓库评分：
+| 选项                        | 内容                           |
+| --------------------------- | ------------------------------ |
+| base repository（目标仓库） | `Shergould/vibecoding-course`  |
+| base（目标分支）            | `main`                         |
+| head repository（来源仓库） | `你的用户名/vibecoding-course` |
+| compare（来源分支）         | `student/你的用户名/git_01`    |
+
+5. 标题建议填写 `git_01: 你的用户名`，点击 **Create pull request**。请提交普通 PR；草稿 PR 要点击 **Ready for review** 后才会评分。
+
+**答案题目与实际操作要区分：** `answer.md` 是命令知识题，其中 Q1 给定原仓库地址，Q2、Q5 假设用户名是 `alice`，请按题设作答；实际提交时则使用自己的 Fork 地址和本人用户名。
+
+## 已经 clone 原仓库或遇到 push 403
+
+不用重做作业，也不用重新 commit。先在 GitHub 完成 Fork，再在现有本地目录运行（替换 `alice`）：
+
+```bash
+git remote set-url origin https://github.com/alice/vibecoding-course.git
+git remote -v
+git push -u origin student/alice/git_01
+```
+
+确认 `origin` 指向自己的账号，然后按上面的步骤创建 PR。如果还没有 `upstream`，可补充：
+
+```bash
+git remote add upstream https://github.com/Shergould/vibecoding-course.git
+```
+
+## 自动评审和反馈
 
 ```text
-学生 push student/alice/git_01
-  -> course 仓库触发 notify-grader workflow
-  -> grader 仓库开始评分
-  -> grader 在本仓库 Issue 中追加反馈
-  -> grader 删除远程学生分支
+创建 PR / 更新 PR 分支 / 重新打开 PR / 草稿转为待评审
+  → 课程仓库通知 grader
+  → grader 读取本次提交并评分
+  → 成绩保存在 grader 仓库，反馈评论发布到该 PR
 ```
 
-通常反馈会在较短时间内出现。如果没有立刻出现，可以稍等一会儿后刷新 Issues 页面。
+只在本地 commit，或只 push 到 Fork 但没有创建 PR，不会进入评分流程。无需老师合并 PR。
 
-## 查看反馈
+打开自己的 PR，在 **Conversation** 中查看评分评论，包括提交 SHA、尝试次数、得分、通过项和需要修改的内容。全部通过后，会显示 Odoo 课程完成密钥。公共仓库中的反馈评论对其他人也可见。
 
-评分完成后，系统会在本仓库创建或更新一个反馈 Issue：
+评分由 GitHub Actions 排队执行，不保证立即出结果；系统还有每 5 分钟配置一次的补偿扫描，实际调度可能延迟。同一个 PR 的同一个提交不会重复计分。短时间连续推送时，系统优先处理最新版本，不保证为被覆盖的中间版本分别评分。
 
-```text
-[Feedback] <你的 GitHub 用户名> git_01
-```
+## 订正和重新提交
 
-例如：
-
-```text
-[Feedback] alice git_01
-```
-
-每次提交都会在同一个 Issue 下面追加一条新评论，评论中会显示：
-
-1. 第几次提交。
-2. 本次得分。
-3. 已通过的检查项。
-4. 需要修改的题目或规则。
-5. 如果全部正确，会显示 Odoo 课程完成密钥。
-
-## 重新提交
-
-评分完成后，系统会删除 GitHub 上的远程分支：
-
-```text
-origin/student/<你的 GitHub 用户名>/git_01
-```
-
-这不会删除你电脑上的本地分支。你可以继续在本地分支上修改，然后重新 push，注意保持同一课程多次提交本地分支名一致即可：
+**系统不会删除你的分支，也不会自动关闭或合并 PR。** 保持 PR 打开，在原分支继续修改：
 
 ```bash
 git add lessons/git_01/answer.md
 git commit -m "finish git_01"
-git push origin student/alice/git_01
+git push
 ```
 
-远程分支会重新创建，系统会把这次 push 记录为下一次提交，并继续在同一个反馈 Issue 中追加评论。
+新提交会自动更新同一个 PR 并触发评分，不需要重复创建 PR。关闭 PR 后停止接收新作业评分，重新打开可以恢复。
 
-## 同步 main
+## 同步老师的更新
 
-如果老师更新了 `main` 分支，建议先同步再继续做题，因此建议每次做题前先进行同步：
+`origin` 是自己的 Fork，`upstream` 是老师的课程仓库。需要同步老师更新时，在自己的作业分支执行：
 
 ```bash
-git fetch origin
-git merge origin/main
+git fetch upstream
+git merge upstream/main
 ```
 
-如果出现冲突，请先解决冲突，再继续提交。
+如有冲突，先解决冲突，再修改作业、创建包含 `finish git_01` 的提交并 push。
 
-## 重要规则
+## 作业规则
 
-- 分支名必须是 `student/<你的 GitHub 用户名>/git_01`。
-- commit message 必须包含 `finish git_01`。
-- 只修改 `lessons/git_01/` 目录。
-- 不要修改 `.github/`、`grader/`、`data/` 等系统目录。
-- 不要删除或修改 `answer.md` 中的题号、标题和代码块结构。
-- 只有 5 道题全部正确时，反馈 Issue 中才会显示 Odoo 完成密钥。
+- 来源必须是本人个人账号下的课程 Fork；分支为 `student/<本人 GitHub 用户名>/git_01`。
+- PR 作者、Fork 所有者和分支中的用户名必须一致（用户名大小写不影响身份校验）。
+- 最新作业 commit message 必须包含 `finish git_01`。
+- 只能修改 `lessons/git_01/`，必须修改 `lessons/git_01/answer.md`。
+- 不要修改 `.github/`、`grader/`、`data/` 等系统文件。
+- 保留题号、标题以及恰好 5 个 `bash` 答案代码块。

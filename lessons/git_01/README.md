@@ -1,101 +1,50 @@
-# git_01: Git 基础实操
+# git_01：Git 基础实操
 
 ## 任务
 
-请修改本目录下的：
+修改 `lessons/git_01/answer.md`，在每道题下面的 `bash` 代码块中填写 Git 命令，保留题号、标题和恰好 5 个答案代码块。
 
-```text
-answer.md
+题目考察 clone、创建分支、add、commit 和 push。**按题目给定条件填写答案**：Q1 使用题设中的课程原仓库地址，Q2 和 Q5 使用假设用户名 `alice`。下面的实际提交流程则使用你自己的账号。
+
+## 提交作业
+
+完整步骤见 [课程提交说明](../../README.md)。首次提交需要先 Fork 课程仓库到自己的 GitHub 个人账号，再 clone 自己的 Fork。
+
+实际分支必须为 `student/<你的 GitHub 用户名>/git_01`。例如，你的用户名是 `alice`：
+
+```bash
+git switch -c student/alice/git_01
+# 完成答案后：
+git add lessons/git_01/answer.md
+git commit -m "finish git_01"
+git push -u origin student/alice/git_01
 ```
 
-在每一道题下面的 `bash` 代码块中填写对应 Git 命令。不要删除题号、标题或代码块。
+请替换实际命令中的 `alice`。`origin` 必须指向自己的 Fork，不能推送到老师的原仓库。
 
-## 考察内容
+在 GitHub 创建普通 PR：从你 Fork 的作业分支提交到 `Shergould/vibecoding-course` 的 `main`。无需协作者权限，也无需合并 PR。
 
-本节课主要考察：
+## 修改范围和评分
 
-1. 使用 `git clone` 克隆课程仓库。
-2. 使用 `git checkout -b` 或等价命令创建并切换分支。
-3. 使用 `git add` 暂存指定文件。
-4. 使用 `git commit` 创建提交。
-5. 使用 `git push` 推送自己的分支。
+- 只修改 `lessons/git_01/`，必须修改 `lessons/git_01/answer.md`。
+- 不得修改 `.github/`、`grader/`、`data/` 或其他课程文件。
+- 最新提交信息必须包含 `finish git_01`。
+- 分支用户名、Fork 所有者和 PR 作者必须一致。
 
-## 分支要求
+系统会在创建 PR 或其分支收到新提交后评分；草稿 PR 暂不评分，点击 **Ready for review** 后开始。定时扫描会补充处理漏掉的通知，运行可能排队。
 
-分支名必须是：
+评分检查提交的 Git 状态和答案文本。
 
-```text
-student/<你的 GitHub 用户名>/git_01
-```
+## 查看反馈与订正
 
-例如 GitHub 用户名是 `alice`，分支名就是：
+反馈在你的 PR 的 **Conversation** 评论区中，不再创建独立反馈 Issue。全部检查通过后，评论会显示 Odoo 完成密钥。
 
-```text
-student/alice/git_01
-```
-
-## 提交要求
-
-commit message 必须包含：
-
-```text
-finish git_01
-```
-
-建议命令：
+系统保留学生分支和 PR。在原分支修改后再次提交：
 
 ```bash
 git add lessons/git_01/answer.md
 git commit -m "finish git_01"
-git push origin student/<你的 GitHub 用户名>/git_01
+git push
 ```
 
-## 修改范围
-
-只能修改：
-
-```text
-lessons/git_01/
-```
-
-不要修改：
-
-```text
-.github/
-grader/
-data/
-```
-
-## 自动评审
-
-你 push 到 GitHub 后，本仓库会自动通知 grader 仓库评分。评分脚本会读取：
-
-```text
-lessons/git_01/answer.md
-```
-
-并检查 5 个 `bash` 代码块是否符合要求。
-
-只有全部检查正确，系统才会在反馈 Issue 中显示 Odoo 课程完成密钥。
-
-## 反馈位置
-
-评分结果会出现在本仓库 Issues 中，标题格式为：
-
-```text
-[Feedback] <你的 GitHub 用户名> git_01
-```
-
-每次提交都会在同一个 Issue 中追加一条新评论。请根据评论中的错误提示修改后重新提交。
-
-## 远程分支会被删除
-
-评分完成后，系统会删除 GitHub 上的远程分支，但不会删除你的本地分支。
-
-如果你要重新提交，继续在本地分支修改并 push 即可：
-
-```bash
-git add lessons/git_01/answer.md
-git commit -m "finish git_01"
-git push origin student/<你的 GitHub 用户名>/git_01
-```
+保持原 PR 打开，新提交会自动进入评分。同一个 PR 的同一个提交不重复计分。
