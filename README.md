@@ -37,22 +37,6 @@ git push -u origin student/alice/git_01
 
 **答案题目与实际操作要区分：** `answer.md` 是命令知识题，其中 Q1 给定原仓库地址，Q2、Q5 假设用户名是 `alice`，请按题设作答；实际提交时则使用自己的 Fork 地址和本人用户名。
 
-## 已经 clone 原仓库或遇到 push 403
-
-不用重做作业，也不用重新 commit。先在 GitHub 完成 Fork，再在现有本地目录运行（替换 `alice`）：
-
-```bash
-git remote set-url origin https://github.com/alice/vibecoding-course.git
-git remote -v
-git push -u origin student/alice/git_01
-```
-
-确认 `origin` 指向自己的账号，然后按上面的步骤创建 PR。如果还没有 `upstream`，可补充：
-
-```bash
-git remote add upstream https://github.com/Shergould/vibecoding-course.git
-```
-
 ## 自动评审和反馈
 
 ```text
